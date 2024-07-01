@@ -1,3 +1,3 @@
-import { startScrapping } from "./scrapping/index.js";
+import { scrappingJob } from "./scrapping/index.js";
 
-startScrapping()
+scrappingJob.start()

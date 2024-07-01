@@ -38,6 +38,12 @@ export class LiveloSource extends ScrappingSource {
       const image = await card.$('img.parity__card--img');
       const title = await image?.evaluate(node => node.alt);
 
+      const sourcePartner = this.source.partners.find(partner => partner.reference === title);
+
+      if (!sourcePartner) {
+        continue;
+      }
+
       const baseCurrency = await card.$('[data-bind="text: $data.currency"]')
       const currency = await baseCurrency?.evaluate(node => node.textContent);
 
@@ -47,13 +53,7 @@ export class LiveloSource extends ScrappingSource {
       const basePoints = await card.$('[data-bind="text: $data.parity"]')
       const parity = await basePoints?.evaluate(node => node.textContent);
 
-      const sourcePartner = this.source.partners.find(partner => partner.reference === title);
-
       if (!value || !parity || !currency || !propertyOf(currency, currencyMap)) {
-        continue;
-      }
-
-      if (!sourcePartner) {
         continue;
       }
 

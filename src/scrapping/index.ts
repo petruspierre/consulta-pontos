@@ -1,8 +1,9 @@
 import puppeteer from "puppeteer";
 import { LiveloSource } from "./sources/livelo.js";
+import { CronJob } from "cron";
 
-export const startScrapping = async () => {
-  console.log('Scrapping started.');
+const startScrapping = async () => {
+  console.log('Scrapping job runnning', new Date().toISOString());
 
   const browser = await puppeteer.launch({ headless: true });
 
@@ -14,3 +15,11 @@ export const startScrapping = async () => {
 
   await browser.close();
 }
+
+export const scrappingJob = new CronJob(
+	'* * * * *',
+	startScrapping,
+	null,
+	false,
+	'America/Sao_Paulo'
+);
