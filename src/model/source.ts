@@ -4,5 +4,8 @@ export type Source = {
   id: number;
   name: string;
   url: string;
-  parity: Parity[];
+  partners: {
+    parityId: string;
+    reference: string;
+  }[]
 }

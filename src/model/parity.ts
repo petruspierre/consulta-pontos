@@ -1,4 +1,5 @@
 export type Parity = {
+  id: string;
   partnerId: number;
   sourceId: number;
   reference: string;
