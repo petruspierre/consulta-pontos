@@ -1,0 +1,9 @@
+services:
+  postgres-database:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: agregamilhas
+    ports:
+      - "5432:5432"
