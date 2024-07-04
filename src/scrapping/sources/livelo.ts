@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer'
 import { ScrappingSource } from './index.js';
-import { Source } from '@/model/source.js';
+import { Source } from '@/infra/db/model/source.js';
 import { propertyOf } from '@/util/propertyOf.js';
 
 export class LiveloSource extends ScrappingSource {

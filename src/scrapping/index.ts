@@ -1,9 +1,14 @@
 import puppeteer from "puppeteer";
 import { LiveloSource } from "./sources/livelo.js";
 import { CronJob } from "cron";
+import { db } from "@/infra/db/connection.js";
 
 const startScrapping = async () => {
   console.log('Scrapping job runnning', new Date().toISOString());
+
+  const sources = await db('source').select('*');
+
+  console.log('Sources', sources)
 
   const browser = await puppeteer.launch({ headless: true });
 
