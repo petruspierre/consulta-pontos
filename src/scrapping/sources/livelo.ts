@@ -26,7 +26,7 @@ export class LiveloSource extends ScrappingSource {
 
     const sourcePartners = source.partners.reduce((acc, partner) => { 
       const { title = '' } = partner.reference as LiveloSourceReference
-      acc[title] = partner.partnerId
+      acc[title] = partner.id
       return acc
     }, {} as Record<string, any>)
 
@@ -62,12 +62,8 @@ export class LiveloSource extends ScrappingSource {
         value: parseFloat(value.replace(',', '.')),
         parity: parseFloat(parity.replace(',', '.'))
       }
-
-      console.log('Loaded partner:', title, 'with value:', value, 'and parity:', parity)
     }
 
-    console.log(result)
-
-    return result
+    await this.saveResults(result)
   }
 }

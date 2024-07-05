@@ -29,10 +29,14 @@ export class SourceRepository {
         name: source.name,
         url: source.url,
         partners: sourcePartners.map(sourcePartner => {
-          return new SourcePartner({
-          partnerId: sourcePartner.partnerId,
-          reference: JSON.parse(JSON.stringify(sourcePartner.reference))
-        }, sourcePartner.id)})
+          return new SourcePartner(
+            {
+              partnerId: sourcePartner.partnerId,
+                reference: JSON.parse(JSON.stringify(sourcePartner.reference))
+            },
+            sourcePartner.id
+          )
+        })
       },
       source.id
     )

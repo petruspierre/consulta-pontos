@@ -22,7 +22,6 @@ declare module 'knex/types/tables.js' {
   interface Parity {
     id: string;
     partner_source_id: string;
-    url: string;
     currency: string;
     value: number;
     parity: number;
