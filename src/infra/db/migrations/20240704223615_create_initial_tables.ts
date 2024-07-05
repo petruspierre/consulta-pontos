@@ -15,7 +15,7 @@ export async function up(knex: Knex): Promise<void> {
       table.uuid('id').primary().defaultTo(knex.fn.uuid());
       table.integer('partner_id').unsigned().notNullable();
       table.integer('source_id').unsigned().notNullable();
-      table.jsonb('reference').notNullable();
+      table.json('reference').notNullable();
 
       table.foreign('partner_id').references('id').inTable('partner');
       table.foreign('source_id').references('id').inTable('source');

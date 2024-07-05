@@ -13,6 +13,10 @@ export const dbConfig: Knex.Config = {
     directory: path.join(__dirname, 'migrations'),
     extension: 'ts'
   },
+  seeds: {
+    directory: path.join(__dirname, 'seeds'),
+    extension: 'ts'
+  },
   connection: {
     host: env.DATABASE_HOST,
     port: env.DATABASE_PORT,

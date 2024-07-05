@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "db:seed:create": "node --import tsx/esm ./node_modules/.bin/knex seed:make",
+    "db:seed:run": "node --import tsx/esm ./node_modules/.bin/knex seed:run",
     "db:migrate:create": "node --import tsx/esm ./node_modules/.bin/knex migrate:make -x ts",
     "db:migrate:latest": "node --import tsx/esm ./node_modules/.bin/knex migrate:latest",
     "db:migrate:rollback": "node --import tsx/esm ./node_modules/.bin/knex migrate:rollback"

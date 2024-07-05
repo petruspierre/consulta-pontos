@@ -16,7 +16,7 @@ declare module 'knex/types/tables.js' {
     id: string;
     partner_id: number;
     source_id: number;
-    reference: Record<string, unknown>;
+    reference: string;
   }
 
   interface Parity {

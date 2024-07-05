@@ -1,31 +1,21 @@
 import { Page } from 'puppeteer'
 import { ScrappingSource } from './index.js';
-import { Source } from '@/infra/db/model/source.js';
 import { propertyOf } from '@/util/propertyOf.js';
+import { SourceRepository } from '@/infra/repositories/source.repository.js';
+
+export type LiveloSourceReference = {
+  title: string
+}
 
 export class LiveloSource extends ScrappingSource {
-  source: Source = {
-    id: 1,
-    name: 'Livelo',
-    url: 'https://www.livelo.com.br/',
-    partners: [
-      {
-        parityId: '2ea5cf4f-648f-4dd7-b344-75108b5e498e',
-        reference: 'Magalu'
-      }
-    ]
-  }
-
   selectors = {
     affiliateCards: '.parity__card'
   }
 
   async run(page: Page) {
-    const currencyMap = {
-      'R$': 'BRL'
-    } as const
+    console.log('Livelo source running...');
+    const source = await this.loadSource()
 
-    console.log('Livelo source running.');
     await page.goto('https://www.livelo.com.br/ganhe-pontos-compre-e-pontue');
     await page.setViewport({ width: 1080, height: 1024 });
 
@@ -34,13 +24,23 @@ export class LiveloSource extends ScrappingSource {
 
     const result = {} as any
 
+    const sourcePartners = source.partners.reduce((acc, partner) => { 
+      const { title = '' } = partner.reference as LiveloSourceReference
+      acc[title] = partner.partnerId
+      return acc
+    }, {} as Record<string, any>)
+
     for (const card of cards) {
       const image = await card.$('img.parity__card--img');
       const title = await image?.evaluate(node => node.alt);
 
-      const sourcePartner = this.source.partners.find(partner => partner.reference === title);
+      if (!title) {
+        continue
+      }
 
-      if (!sourcePartner) {
+      const sourcePartnerId = sourcePartners[title];
+
+      if (!sourcePartnerId) {
         continue;
       }
 
@@ -53,12 +53,12 @@ export class LiveloSource extends ScrappingSource {
       const basePoints = await card.$('[data-bind="text: $data.parity"]')
       const parity = await basePoints?.evaluate(node => node.textContent);
 
-      if (!value || !parity || !currency || !propertyOf(currency, currencyMap)) {
+      if (!value || !parity || !currency || !propertyOf(currency, this.currencyMap)) {
         continue;
       }
 
-      result[sourcePartner.parityId] = {
-        currency: currencyMap[currency],
+      result[sourcePartnerId] = {
+        currency: this.currencyMap[currency],
         value: parseFloat(value.replace(',', '.')),
         parity: parseFloat(parity.replace(',', '.'))
       }
