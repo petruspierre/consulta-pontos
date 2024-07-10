@@ -1,7 +1,6 @@
 import { Page } from 'puppeteer'
 import { ScrappingSource } from './index.js';
 import { propertyOf } from '@/util/propertyOf.js';
-import { SourceRepository } from '@/infra/repositories/source.repository.js';
 
 export type LiveloSourceReference = {
   title: string
@@ -53,6 +52,11 @@ export class LiveloSource extends ScrappingSource {
       const basePoints = await card.$('[data-bind="text: $data.parity"]')
       const parity = await basePoints?.evaluate(node => node.textContent);
 
+      // const baseURL = await card.$('.button__knowmore--link gtm-link-event')
+      // const url = await baseURL?.evaluate(node => node.getAttribute('href'));
+
+      // console.log(url)
+
       if (!value || !parity || !currency || !propertyOf(currency, this.currencyMap)) {
         continue;
       }
@@ -60,7 +64,8 @@ export class LiveloSource extends ScrappingSource {
       result[sourcePartnerId] = {
         currency: this.currencyMap[currency],
         value: parseFloat(value.replace(',', '.')),
-        parity: parseFloat(parity.replace(',', '.'))
+        parity: parseFloat(parity.replace(',', '.')),
+        url: ""
       }
     }
 

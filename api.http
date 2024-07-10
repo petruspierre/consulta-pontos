@@ -1,0 +1,8 @@
+### Get all sources
+GET http://localhost:3000/source
+
+### Get all partners
+GET http://localhost:3000/partner
+
+### Get parities for a source
+GET http://localhost:3000/source/1/parity
