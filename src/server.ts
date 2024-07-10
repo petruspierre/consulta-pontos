@@ -2,10 +2,10 @@ import './infra/env.js'
 
 import Fastify from 'fastify'
 
-import { scrappingJob } from "./scrapping/index.js";
+import { scrapingJob } from "./scraping/index.js";
 import { db } from './infra/db/connection.js';
 
-scrappingJob.start()
+scrapingJob.start()
 
 const server = Fastify({
   logger: true

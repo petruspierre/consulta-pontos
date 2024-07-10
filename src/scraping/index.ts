@@ -8,8 +8,8 @@ import { SourceDAO } from "@/infra/dao/source.dao.js";
 const sourceRepository = new SourceRepository();
 const sourceDAO = new SourceDAO();
 
-const startScrapping = async () => {
-  console.log('Scrapping job runnning', new Date().toISOString());
+const startScraping = async () => {
+  console.log('Scraping job runnning', new Date().toISOString());
 
   const sources = await sourceDAO.findAll();
 
@@ -34,9 +34,9 @@ const startScrapping = async () => {
   await browser.close();
 }
 
-export const scrappingJob = new CronJob(
+export const scrapingJob = new CronJob(
 	'* * * * *',
-	startScrapping,
+	startScraping,
 	null,
 	false,
 	'America/Sao_Paulo'

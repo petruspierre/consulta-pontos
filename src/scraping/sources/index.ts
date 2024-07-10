@@ -3,14 +3,14 @@ import { db } from "@/infra/db/connection.js";
 import { SourceRepository } from "@/infra/repositories/source.repository.js";
 import { ElementHandle, Page } from "puppeteer";
 
-export type ScrappingResult = Record<string, {
+export type ScrapingResult = Record<string, {
   currency: string,
   value: number,
   parity: number,
   url: string
 }>
 
-export abstract class ScrappingSource { 
+export abstract class ScrapingSource { 
   currencyMap = {
     'R$': 'BRL'
   } as const
@@ -34,7 +34,7 @@ export abstract class ScrappingSource {
     return await this.sourceRepository.findById(this.sourceId)
   }
 
-  protected async saveResults(results: ScrappingResult) {
+  protected async saveResults(results: ScrapingResult) {
     console.log('Saving results', results)
     const data = Object.entries(results).map(([sourcePartnerId, { currency, value, parity, url }]) => ({
       partner_source_id: sourcePartnerId,

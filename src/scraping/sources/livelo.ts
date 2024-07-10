@@ -1,12 +1,12 @@
 import { Page } from 'puppeteer'
-import { ScrappingResult, ScrappingSource } from './index.js';
+import { ScrapingResult, ScrapingSource } from './index.js';
 import { propertyOf } from '@/util/propertyOf.js';
 
 export type LiveloSourceReference = {
   title: string
 }
 
-export class LiveloSource extends ScrappingSource {
+export class LiveloSource extends ScrapingSource {
   selectors = {
     affiliateCards: '.parity__card',
     cardImage: 'img.parity__card--img',
@@ -26,7 +26,7 @@ export class LiveloSource extends ScrappingSource {
     await page.waitForSelector(this.selectors.affiliateCards);
     const cards = await page.$$(this.selectors.affiliateCards);
 
-    const result = {} as ScrappingResult
+    const result = {} as ScrapingResult
 
     const sourcePartners = source.partners.reduce((acc, partner) => { 
       const { title = '' } = partner.reference as LiveloSourceReference
