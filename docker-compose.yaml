@@ -5,5 +5,7 @@ services:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
       POSTGRES_DB: agregamilhas
+    volumes:
+      - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
