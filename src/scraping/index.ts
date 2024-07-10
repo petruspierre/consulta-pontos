@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import { LiveloSource } from "./sources/livelo.js";
 import { CronJob } from "cron";
-import { db } from "@/infra/db/connection.js";
 import { SourceRepository } from "@/infra/repositories/source.repository.js";
 import { SourceDAO } from "@/infra/dao/source.dao.js";
 
@@ -12,8 +11,6 @@ const startScraping = async () => {
   console.log('Scraping job runnning', new Date().toISOString());
 
   const sources = await sourceDAO.findAll();
-
-  console.log('Sources', sources)
 
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
