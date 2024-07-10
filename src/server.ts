@@ -4,15 +4,18 @@ import Fastify from 'fastify'
 
 import { scrapingJob } from "./scraping/index.js";
 import { db } from './infra/db/connection.js';
+import { SourceDAO } from './infra/dao/source.dao.js';
 
 scrapingJob.start()
+
+const sourceDAO = new SourceDAO();
 
 const server = Fastify({
   logger: true
 })
 
 server.get('/source', async (request, reply) => {
-  const sources = await db('source').select('*')
+  const sources = await sourceDAO.findAll()
 
   return sources
 })
@@ -24,26 +27,11 @@ server.get('/partner', async (request, reply) => {
 })
 
 server.get('/source/:sourceId/parity', async (request, reply) => {
-  const { sourceId } = request.params as any
+  const { sourceId } = request.params as { sourceId: string }
 
-  const parities = await db.raw(`
-    SELECT 
-      s.name as "source_name",
-      p.name as "partner_name",
-      pr.*
-    FROM source s
-    JOIN partner_source ps ON ps.source_id = s.id
-    JOIN partner p ON p.id = ps.partner_id
-    JOIN (
-      SELECT DISTINCT ON (partner_source_id)
-        *
-      FROM parity
-      ORDER BY partner_source_id, created_at DESC
-    ) pr ON pr.partner_source_id = ps.id
-    WHERE s.id = ?
-  `, [sourceId])
+  const parities = sourceDAO.getWithParities(sourceId)
 
-  return parities.rows
+  return parities
 })
 
 const startServer = async () => {
