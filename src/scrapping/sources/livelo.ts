@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer'
-import { ScrappingSource } from './index.js';
+import { ScrappingResult, ScrappingSource } from './index.js';
 import { propertyOf } from '@/util/propertyOf.js';
 
 export type LiveloSourceReference = {
@@ -8,20 +8,25 @@ export type LiveloSourceReference = {
 
 export class LiveloSource extends ScrappingSource {
   selectors = {
-    affiliateCards: '.parity__card'
+    affiliateCards: '.parity__card',
+    cardImage: 'img.parity__card--img',
+    currency: '[data-bind="text: $data.currency"]',
+    value: '[data-bind="text: $data.value"]',
+    parity: '[data-bind="text: $data.parity"]',
+    url: '.button__knowmore--link'
   }
 
   async run(page: Page) {
     console.log('Livelo source running...');
     const source = await this.loadSource()
 
-    await page.goto('https://www.livelo.com.br/ganhe-pontos-compre-e-pontue');
+    await page.goto(source.url, { waitUntil: 'domcontentloaded' });
     await page.setViewport({ width: 1080, height: 1024 });
 
     await page.waitForSelector(this.selectors.affiliateCards);
     const cards = await page.$$(this.selectors.affiliateCards);
 
-    const result = {} as any
+    const result = {} as ScrappingResult
 
     const sourcePartners = source.partners.reduce((acc, partner) => { 
       const { title = '' } = partner.reference as LiveloSourceReference
@@ -30,7 +35,7 @@ export class LiveloSource extends ScrappingSource {
     }, {} as Record<string, any>)
 
     for (const card of cards) {
-      const image = await card.$('img.parity__card--img');
+      const image = await this.getElementOrThrow<HTMLImageElement>(card, this.selectors.cardImage);
       const title = await image?.evaluate(node => node.alt);
 
       if (!title) {
@@ -43,21 +48,14 @@ export class LiveloSource extends ScrappingSource {
         continue;
       }
 
-      const baseCurrency = await card.$('[data-bind="text: $data.currency"]')
-      const currency = await baseCurrency?.evaluate(node => node.textContent);
+      const currency = await this.getTextFromElement(card, this.selectors.currency)
+      const value = await this.getTextFromElement(card, this.selectors.value)
+      const parity = await this.getTextFromElement(card, this.selectors.parity)
 
-      const baseValue = await card.$('[data-bind="text: $data.value"]')
-      const value = await baseValue?.evaluate(node => node.textContent);
+      const urlElement = await this.getElementOrThrow(card, this.selectors.url)
+      const url = await urlElement?.evaluate(node => node.getAttribute('href'));
 
-      const basePoints = await card.$('[data-bind="text: $data.parity"]')
-      const parity = await basePoints?.evaluate(node => node.textContent);
-
-      // const baseURL = await card.$('.button__knowmore--link gtm-link-event')
-      // const url = await baseURL?.evaluate(node => node.getAttribute('href'));
-
-      // console.log(url)
-
-      if (!value || !parity || !currency || !propertyOf(currency, this.currencyMap)) {
+      if (!value || !parity || !currency ||!url || !propertyOf(currency, this.currencyMap)) {
         continue;
       }
 
@@ -65,7 +63,7 @@ export class LiveloSource extends ScrappingSource {
         currency: this.currencyMap[currency],
         value: parseFloat(value.replace(',', '.')),
         parity: parseFloat(parity.replace(',', '.')),
-        url: ""
+        url
       }
     }
 

@@ -1,6 +1,7 @@
 import { Source } from "@/entities/source.js";
 import { db } from "@/infra/db/connection.js";
 import { SourceRepository } from "@/infra/repositories/source.repository.js";
+import { ElementHandle, Page } from "puppeteer";
 
 export type ScrappingResult = Record<string, {
   currency: string,
@@ -15,6 +16,19 @@ export abstract class ScrappingSource {
   } as const
 
   constructor(private sourceRepository: SourceRepository, private sourceId: number) { }
+
+  protected getTextFromElement = async (parent: ElementHandle | Page, selector: string) => {
+    const element = await parent.$(selector)
+    return (element?.evaluate(node => node.textContent)) || ''
+  }
+
+  protected async getElementOrThrow<T extends Element = Element>(parent: ElementHandle | Page, selector: string) {
+    const element = (await parent.$(selector)) as ElementHandle<T> | null
+    if (!element) {
+      throw new Error(`Element not found: ${selector}`)
+    }
+    return element
+  }
 
   protected async loadSource() {
     return await this.sourceRepository.findById(this.sourceId)
