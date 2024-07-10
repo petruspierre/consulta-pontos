@@ -1,33 +1,35 @@
 {
-  "name": "agrega-milhas",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "db:seed:create": "node --import tsx/esm ./node_modules/.bin/knex seed:make",
-    "db:seed:run": "node --import tsx/esm ./node_modules/.bin/knex seed:run",
-    "db:migrate:create": "node --import tsx/esm ./node_modules/.bin/knex migrate:make -x ts",
-    "db:migrate:latest": "node --import tsx/esm ./node_modules/.bin/knex migrate:latest",
-    "db:migrate:rollback": "node --import tsx/esm ./node_modules/.bin/knex migrate:rollback"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^20.14.9",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.16.0",
-    "typescript": "^5.5.3"
-  },
-  "dependencies": {
-    "cron": "^3.1.7",
-    "dotenv": "^16.4.5",
-    "fastify": "^4.28.1",
-    "knex": "^3.1.0",
-    "pg": "^8.12.0",
-    "puppeteer": "^22.12.1",
-    "zod": "^3.23.8"
-  }
+	"name": "agrega-milhas",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"dev": "tsx watch src/server.ts",
+		"lint:fix": "biome check --write",
+		"db:seed:create": "node --import tsx/esm ./node_modules/.bin/knex seed:make",
+		"db:seed:run": "node --import tsx/esm ./node_modules/.bin/knex seed:run",
+		"db:migrate:create": "node --import tsx/esm ./node_modules/.bin/knex migrate:make -x ts",
+		"db:migrate:latest": "node --import tsx/esm ./node_modules/.bin/knex migrate:latest",
+		"db:migrate:rollback": "node --import tsx/esm ./node_modules/.bin/knex migrate:rollback"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@biomejs/biome": "1.8.3",
+		"@types/node": "^20.14.9",
+		"ts-node": "^10.9.2",
+		"tsx": "^4.16.0",
+		"typescript": "^5.5.3"
+	},
+	"dependencies": {
+		"cron": "^3.1.7",
+		"dotenv": "^16.4.5",
+		"fastify": "^4.28.1",
+		"knex": "^3.1.0",
+		"pg": "^8.12.0",
+		"puppeteer": "^22.12.1",
+		"zod": "^3.23.8"
+	}
 }

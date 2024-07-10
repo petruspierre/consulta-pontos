@@ -1,18 +1,19 @@
 import { db } from "../db/connection.js";
 
 export class SourceDAO {
-  async findAll() {
-    const data = await db('source').select({
-      id: 'id',
-      name: 'name',
-      url: 'url'
-    })
+	async findAll() {
+		const data = await db("source").select({
+			id: "id",
+			name: "name",
+			url: "url",
+		});
 
-    return data;
-  }
+		return data;
+	}
 
-  async getWithParities(sourceId: string) { 
-    const data = await db.raw(`
+	async getWithParities(sourceId: string) {
+		const data = await db.raw(
+			`
       SELECT 
         s.name as "source_name",
         p.name as "partner_name",
@@ -27,8 +28,10 @@ export class SourceDAO {
         ORDER BY partner_source_id, created_at DESC
       ) pr ON pr.partner_source_id = ps.id
       WHERE s.id = ?
-    `, [sourceId])
+    `,
+			[sourceId],
+		);
 
-    return data.rows
-  }
+		return data.rows;
+	}
 }

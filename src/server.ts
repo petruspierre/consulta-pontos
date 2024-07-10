@@ -1,46 +1,46 @@
-import './infra/env.js'
+import "./infra/env.js";
 
-import Fastify from 'fastify'
+import Fastify from "fastify";
 
+import { SourceDAO } from "./infra/dao/source.dao.js";
+import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
-import { db } from './infra/db/connection.js';
-import { SourceDAO } from './infra/dao/source.dao.js';
 
-scrapingJob.start()
+scrapingJob.start();
 
 const sourceDAO = new SourceDAO();
 
 const server = Fastify({
-  logger: true
-})
+	logger: true,
+});
 
-server.get('/source', async (request, reply) => {
-  const sources = await sourceDAO.findAll()
+server.get("/source", async (request, reply) => {
+	const sources = await sourceDAO.findAll();
 
-  return sources
-})
+	return sources;
+});
 
-server.get('/partner', async (request, reply) => { 
-  const partners = await db('partner').select('*')
+server.get("/partner", async (request, reply) => {
+	const partners = await db("partner").select("*");
 
-  return partners
-})
+	return partners;
+});
 
-server.get('/source/:sourceId/parity', async (request, reply) => {
-  const { sourceId } = request.params as { sourceId: string }
+server.get("/source/:sourceId/parity", async (request, reply) => {
+	const { sourceId } = request.params as { sourceId: string };
 
-  const parities = sourceDAO.getWithParities(sourceId)
+	const parities = sourceDAO.getWithParities(sourceId);
 
-  return parities
-})
+	return parities;
+});
 
 const startServer = async () => {
-  try {
-    await server.listen({ port: 3000 })
-  } catch (err) {
-    server.log.error(err)
-    process.exit(1)
-  }
-}
+	try {
+		await server.listen({ port: 3000 });
+	} catch (err) {
+		server.log.error(err);
+		process.exit(1);
+	}
+};
 
-startServer()
+startServer();
