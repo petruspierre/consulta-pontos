@@ -25,7 +25,7 @@ declare module "knex/types/tables.js" {
 		currency: string;
 		value: number;
 		parity: number;
-		premium_parity: number;
+		premium_parity: number | null;
 		created_at: Date;
 	}
 

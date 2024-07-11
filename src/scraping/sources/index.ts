@@ -10,12 +10,14 @@ export type ScrapingResult = Record<
 		value: number;
 		parity: number;
 		url: string;
+		premiumParity: number | null;
 	}
 >;
 
 export abstract class ScrapingSource {
 	currencyMap = {
 		R$: "BRL",
+		U$: "USD",
 	} as const;
 
 	constructor(
@@ -49,12 +51,13 @@ export abstract class ScrapingSource {
 	protected async saveResults(results: ScrapingResult) {
 		console.log("Saving results", results);
 		const data = Object.entries(results).map(
-			([sourcePartnerId, { currency, value, parity, url }]) => ({
+			([sourcePartnerId, { currency, value, parity, url, premiumParity }]) => ({
 				partner_source_id: sourcePartnerId,
 				currency,
 				value,
 				parity,
 				url,
+				premium_parity: premiumParity,
 			}),
 		);
 		await db("parity").insert(data);

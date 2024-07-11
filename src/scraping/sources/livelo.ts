@@ -13,6 +13,8 @@ export class LiveloSource extends ScrapingSource {
 		currency: '[data-bind="text: $data.currency"]',
 		value: '[data-bind="text: $data.value"]',
 		parity: '[data-bind="text: $data.parity"]',
+		extendedPremiumParity: '[data-bind="text: $data.extended_parity_clube"]',
+		extendedNormalParity: '[data-bind="text: $data.extended_parity"]',
 		url: ".button__knowmore--link",
 	};
 
@@ -54,12 +56,32 @@ export class LiveloSource extends ScrapingSource {
 				continue;
 			}
 
-			const currency = await this.getTextFromElement(
+			let currency: string | null = null;
+			let value: string | null = null;
+			let parity: string | null = null;
+			let premiumParity: string | null = null;
+
+			const extendedPremiumParity = await this.getTextFromElement(
 				card,
-				this.selectors.currency,
+				this.selectors.extendedPremiumParity,
 			);
-			const value = await this.getTextFromElement(card, this.selectors.value);
-			const parity = await this.getTextFromElement(card, this.selectors.parity);
+			const extendedNormalParity = await this.getTextFromElement(
+				card,
+				this.selectors.extendedNormalParity,
+			);
+
+			if (extendedPremiumParity) {
+				[currency, value, , premiumParity] = extendedPremiumParity.split(" ");
+			} else {
+				currency = await this.getTextFromElement(card, this.selectors.currency);
+				value = await this.getTextFromElement(card, this.selectors.value);
+			}
+
+			if (extendedNormalParity) {
+				parity = extendedNormalParity.split(" ")[2];
+			} else {
+				parity = await this.getTextFromElement(card, this.selectors.parity);
+			}
 
 			const urlElement = await this.getElementOrThrow(card, this.selectors.url);
 			const url = await urlElement?.evaluate((node) =>
@@ -81,6 +103,9 @@ export class LiveloSource extends ScrapingSource {
 				value: Number.parseFloat(value.replace(",", ".")),
 				parity: Number.parseFloat(parity.replace(",", ".")),
 				url,
+				premiumParity: premiumParity
+					? Number.parseFloat(premiumParity.replace(",", "."))
+					: null,
 			};
 		}
 
