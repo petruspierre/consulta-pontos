@@ -40,7 +40,7 @@ export async function seed(knex: Knex): Promise<void> {
 			partner_id: 2,
 			source_id: 1,
 			reference: JSON.stringify({
-				title: "AliExpress",
+				title: "Aliexpress",
 			}),
 		},
 		{
