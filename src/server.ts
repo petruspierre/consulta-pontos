@@ -39,7 +39,7 @@ server.get("/source/:sourceId", async (request, reply) => {
 server.get("/source/:sourceId/parity", async (request, reply) => {
 	const { sourceId } = request.params as { sourceId: number };
 
-	const parities = parityDAO.getBySourceId(sourceId);
+	const parities = await parityDAO.getBySourceId(sourceId);
 
 	reply.send(parities);
 });
@@ -52,7 +52,7 @@ server.get(
 			parityId: number;
 		};
 
-		const history = parityDAO.getHistory(sourceId, parityId);
+		const history = await parityDAO.getHistory(sourceId, parityId);
 
 		reply.send(history);
 	},
