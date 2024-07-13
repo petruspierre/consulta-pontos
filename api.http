@@ -4,5 +4,11 @@ GET http://localhost:3000/source
 ### Get all partners
 GET http://localhost:3000/partner
 
-### Get parities for a source
+### Get source information
+GET http://localhost:3000/source/1
+
+### Get source parities
 GET http://localhost:3000/source/1/parity
+
+### Get parity history
+GET http://localhost:3000/source/1/parity/1/history

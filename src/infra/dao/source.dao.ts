@@ -1,6 +1,42 @@
 import { db } from "../db/connection.js";
 
 export class SourceDAO {
+	async findById(id: number) {
+		const source = await db("source")
+			.select({
+				id: "id",
+				name: "name",
+				url: "url",
+			})
+			.where("id", id)
+			.first();
+
+		const sourcePartners = await db("partner_source")
+			.select({
+				id: "id",
+				partnerId: "partner_id",
+				reference: "reference",
+			})
+			.where("source_id", id);
+
+		if (!source) {
+			throw new Error("Source not found");
+		}
+
+		return {
+			id: source.id,
+			name: source.name,
+			url: source.url,
+			partners: sourcePartners.map((sourcePartner) => {
+				return {
+					id: sourcePartner.id,
+					partnerId: sourcePartner.partnerId,
+					reference: JSON.parse(JSON.stringify(sourcePartner.reference)),
+				};
+			}),
+		};
+	}
+
 	async findAll() {
 		const data = await db("source").select({
 			id: "id",
@@ -9,29 +45,5 @@ export class SourceDAO {
 		});
 
 		return data;
-	}
-
-	async getWithParities(sourceId: string) {
-		const data = await db.raw(
-			`
-      SELECT 
-        s.name as "source_name",
-        p.name as "partner_name",
-        pr.*
-      FROM source s
-      JOIN partner_source ps ON ps.source_id = s.id
-      JOIN partner p ON p.id = ps.partner_id
-      JOIN (
-        SELECT DISTINCT ON (partner_source_id)
-          *
-        FROM parity
-        ORDER BY partner_source_id, created_at DESC
-      ) pr ON pr.partner_source_id = ps.id
-      WHERE s.id = ?
-    `,
-			[sourceId],
-		);
-
-		return data.rows;
 	}
 }

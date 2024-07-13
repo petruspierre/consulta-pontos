@@ -1,10 +1,8 @@
 import { SourceDAO } from "@/infra/dao/source.dao.js";
-import { SourceRepository } from "@/infra/repositories/source.repository.js";
 import { CronJob } from "cron";
 import puppeteer from "puppeteer";
 import { LiveloSource } from "./sources/livelo.js";
 
-const sourceRepository = new SourceRepository();
 const sourceDAO = new SourceDAO();
 
 const startScraping = async () => {
@@ -21,7 +19,7 @@ const startScraping = async () => {
 	for (const source of sources) {
 		switch (source.name) {
 			case "Livelo": {
-				const liveloSource = new LiveloSource(sourceRepository, source.id);
+				const liveloSource = new LiveloSource(sourceDAO, source.id);
 				await liveloSource.run(page);
 				break;
 			}

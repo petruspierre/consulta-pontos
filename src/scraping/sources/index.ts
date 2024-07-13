@@ -1,6 +1,6 @@
 import { Source } from "@/entities/source.js";
+import type { SourceDAO } from "@/infra/dao/source.dao.js";
 import { db } from "@/infra/db/connection.js";
-import type { SourceRepository } from "@/infra/repositories/source.repository.js";
 import type { ElementHandle, Page } from "puppeteer";
 
 export type ScrapingResult = Record<
@@ -21,7 +21,7 @@ export abstract class ScrapingSource {
 	} as const;
 
 	constructor(
-		private sourceRepository: SourceRepository,
+		private sourceDAO: SourceDAO,
 		private sourceId: number,
 	) {}
 
@@ -45,7 +45,7 @@ export abstract class ScrapingSource {
 	}
 
 	protected async loadSource() {
-		return await this.sourceRepository.findById(this.sourceId);
+		return await this.sourceDAO.findById(this.sourceId);
 	}
 
 	protected async saveResults(results: ScrapingResult) {

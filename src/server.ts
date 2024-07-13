@@ -5,10 +5,12 @@ import Fastify from "fastify";
 import { SourceDAO } from "./infra/dao/source.dao.js";
 import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
+import { ParityDAO } from "./infra/dao/parity.dao.js";
 
 scrapingJob.start();
 
 const sourceDAO = new SourceDAO();
+const parityDAO = new ParityDAO();
 
 const server = Fastify({
 	logger: true,
@@ -17,22 +19,44 @@ const server = Fastify({
 server.get("/source", async (request, reply) => {
 	const sources = await sourceDAO.findAll();
 
-	return sources;
+	reply.send(sources);
 });
 
 server.get("/partner", async (request, reply) => {
 	const partners = await db("partner").select("*");
 
-	return partners;
+	reply.send(partners);
+});
+
+server.get("/source/:sourceId", async (request, reply) => {
+	const { sourceId } = request.params as { sourceId: number };
+
+	const source = await sourceDAO.findById(sourceId);
+
+	reply.send(source);
 });
 
 server.get("/source/:sourceId/parity", async (request, reply) => {
-	const { sourceId } = request.params as { sourceId: string };
+	const { sourceId } = request.params as { sourceId: number };
 
-	const parities = sourceDAO.getWithParities(sourceId);
+	const parities = parityDAO.getBySourceId(sourceId);
 
-	return parities;
+	reply.send(parities);
 });
+
+server.get(
+	"/source/:sourceId/parity/:parityId/history",
+	async (request, reply) => {
+		const { sourceId, parityId } = request.params as {
+			sourceId: number;
+			parityId: number;
+		};
+
+		const history = parityDAO.getHistory(sourceId, parityId);
+
+		reply.send(history);
+	},
+);
 
 const startServer = async () => {
 	try {
