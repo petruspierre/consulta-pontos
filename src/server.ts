@@ -2,7 +2,7 @@ import "./infra/env.js";
 
 import Fastify from "fastify";
 
-import { SourceDAO } from "./infra/dao/source.dao.js";
+import { SourceDAO, SourceSearchParams } from "./infra/dao/source.dao.js";
 import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
 import { ParityDAO } from "./infra/dao/parity.dao.js";
@@ -16,10 +16,33 @@ const server = Fastify({
 	logger: true,
 });
 
-server.get("/source", async (request, reply) => {
-	const sources = await sourceDAO.findAll();
+type SearchQueryParams = {
+	page?: string;
+	per_page?: string;
+	filter?: string;
+	sort?: string;
+	sort_dir?: string;
+};
 
-	reply.send(sources);
+server.get("/source", async (request, reply) => {
+	const { page, per_page, filter, sort, sort_dir } =
+		request.query as SearchQueryParams;
+	const searchParams = new SourceSearchParams({
+		filter,
+		page,
+		per_page,
+		sort,
+		sort_dir,
+	});
+	const sources = await sourceDAO.search(searchParams);
+
+	reply.send({
+		data: sources,
+		meta: {
+			page: searchParams.page,
+			per_page: searchParams.per_page,
+		},
+	});
 });
 
 server.get("/partner", async (request, reply) => {

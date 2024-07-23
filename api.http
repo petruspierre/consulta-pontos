@@ -1,5 +1,5 @@
 ### Get all sources
-GET http://localhost:3000/source
+GET http://localhost:3000/source?page=1&per_page=15
 
 ### Get all partners
 GET http://localhost:3000/partner
