@@ -6,6 +6,7 @@ import { SourceDAO, SourceSearchParams } from "./infra/dao/source.dao.js";
 import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
 import { ParityDAO } from "./infra/dao/parity.dao.js";
+import { env } from "./infra/env.js";
 
 scrapingJob.start();
 
@@ -83,7 +84,7 @@ server.get(
 
 const startServer = async () => {
 	try {
-		await server.listen({ port: 3000 });
+		await server.listen({ port: env.PORT });
 	} catch (err) {
 		server.log.error(err);
 		process.exit(1);

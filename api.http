@@ -1,14 +1,14 @@
 ### Get all sources
-GET http://localhost:3000/source?page=1&per_page=15
+GET http://localhost:3366/source?page=1&per_page=15
 
 ### Get all partners
-GET http://localhost:3000/partner
+GET http://localhost:3366/partner
 
 ### Get source information
-GET http://localhost:3000/source/1
+GET http://localhost:3366/source/1
 
 ### Get source parities
-GET http://localhost:3000/source/1/parity
+GET http://localhost:3366/source/1/parity
 
 ### Get parity history
-GET http://localhost:3000/source/1/parity/1/history
+GET http://localhost:3366/source/1/parity/1/history

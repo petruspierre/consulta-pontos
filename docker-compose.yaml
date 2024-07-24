@@ -4,8 +4,14 @@ services:
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: docker
-      POSTGRES_DB: agregamilhas
+      POSTGRES_DB: consultapontos
+    hostname: postgres.internal
     volumes:
       - ./data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
+    healthcheck:
+      interval: 2s
+      retries: 30
+      test: ["CMD-SHELL", "pg_isready -U docker -d consultapontos"]
+      timeout: 10s
