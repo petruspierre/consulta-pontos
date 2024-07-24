@@ -40,7 +40,6 @@ const authenticate: Fastify.onRequestAsyncHookHandler = async (
 	const { result, error } = await verifyKey(key);
 
 	if (error) {
-		console.error(error);
 		return reply.code(500).send({ error: "Internal Server Error" });
 	}
 
