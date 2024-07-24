@@ -7,8 +7,9 @@ import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
 import { ParityDAO } from "./infra/dao/parity.dao.js";
 import { env } from "./infra/env.js";
+import { verifyKey } from "@unkey/api";
 
-scrapingJob.start();
+// scrapingJob.start();
 
 const sourceDAO = new SourceDAO();
 const parityDAO = new ParityDAO();
@@ -24,6 +25,31 @@ type SearchQueryParams = {
 	sort?: string;
 	sort_dir?: string;
 };
+
+const authenticate: Fastify.onRequestAsyncHookHandler = async (
+	request,
+	reply,
+) => {
+	const authHeader = request.headers.authorization;
+	const key = authHeader?.toString().replace("Bearer ", "");
+
+	if (!key) {
+		return reply.code(401).send({ error: "Unauthorized" });
+	}
+
+	const { result, error } = await verifyKey(key);
+
+	if (error) {
+		console.error(error);
+		return reply.code(500).send({ error: "Internal Server Error" });
+	}
+
+	if (!result.valid) {
+		return reply.code(401).send({ error: "Unauthorized" });
+	}
+};
+
+server.addHook("onRequest", authenticate);
 
 server.get("/source", async (request, reply) => {
 	const { page, per_page, filter, sort, sort_dir } =
