@@ -1,3 +1,11 @@
+export type SearchQueryParams = {
+	page?: string;
+	per_page?: string;
+	filter?: string;
+	sort?: string;
+	sort_dir?: string;
+};
+
 export type SortDir = "asc" | "desc";
 
 export type SearchParamsProps<Filter = string> = {

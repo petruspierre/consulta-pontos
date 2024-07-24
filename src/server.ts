@@ -8,8 +8,9 @@ import { scrapingJob } from "./scraping/index.js";
 import { ParityDAO } from "./infra/dao/parity.dao.js";
 import { env } from "./infra/env.js";
 import { verifyKey } from "@unkey/api";
+import type { SearchQueryParams } from "./util/search-params.js";
 
-// scrapingJob.start();
+scrapingJob.start();
 
 const sourceDAO = new SourceDAO();
 const parityDAO = new ParityDAO();
@@ -17,14 +18,6 @@ const parityDAO = new ParityDAO();
 const server = Fastify({
 	logger: true,
 });
-
-type SearchQueryParams = {
-	page?: string;
-	per_page?: string;
-	filter?: string;
-	sort?: string;
-	sort_dir?: string;
-};
 
 const authenticate: Fastify.onRequestAsyncHookHandler = async (
 	request,
