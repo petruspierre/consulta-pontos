@@ -1,4 +1,7 @@
+import { SearchParams } from "@/util/search-params.js";
 import { db } from "../db/connection.js";
+
+export class ParityHistorySearchParams extends SearchParams<undefined> {}
 
 export class ParityDAO {
 	async getBySourceId(sourceId: number) {
@@ -25,7 +28,11 @@ export class ParityDAO {
 		return data.rows;
 	}
 
-	async getHistory(sourceId: number, partnerId: number) {
+	async getHistory(
+		sourceId: number,
+		partnerId: number,
+		searchParams: ParityHistorySearchParams,
+	) {
 		const partnerSource = await db
 			.from("partner_source")
 			.select({
@@ -41,7 +48,7 @@ export class ParityDAO {
 			.andWhere("source_id", sourceId)
 			.first();
 
-		const data = await db
+		const query = db
 			.from("parity")
 			.select({
 				parityId: "parity.id",
@@ -54,6 +61,14 @@ export class ParityDAO {
 			.join("partner_source", "parity.partner_source_id", "partner_source.id")
 			.where("partner_source.id", partnerSource.id)
 			.orderBy("parity.created_at", "desc");
+
+		if (searchParams) {
+			query
+				.limit(searchParams.per_page)
+				.offset(searchParams.per_page * (searchParams.page - 1));
+		}
+
+		const data = await query;
 
 		return {
 			...partnerSource,

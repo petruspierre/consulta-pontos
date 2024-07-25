@@ -5,7 +5,10 @@ import Fastify from "fastify";
 import { SourceDAO, SourceSearchParams } from "./infra/dao/source.dao.js";
 import { db } from "./infra/db/connection.js";
 import { scrapingJob } from "./scraping/index.js";
-import { ParityDAO } from "./infra/dao/parity.dao.js";
+import {
+	ParityDAO,
+	ParityHistorySearchParams,
+} from "./infra/dao/parity.dao.js";
 import { env } from "./infra/env.js";
 import { verifyKey } from "@unkey/api";
 import type { SearchQueryParams } from "./util/search-params.js";
@@ -89,14 +92,30 @@ server.get("/source/:sourceId/parity", async (request, reply) => {
 server.get(
 	"/source/:sourceId/parity/:parityId/history",
 	async (request, reply) => {
+		const { page, per_page } = request.query as SearchQueryParams;
+		const searchParams = new ParityHistorySearchParams({
+			page,
+			per_page,
+		});
+
 		const { sourceId, parityId } = request.params as {
 			sourceId: number;
 			parityId: number;
 		};
 
-		const history = await parityDAO.getHistory(sourceId, parityId);
+		const history = await parityDAO.getHistory(
+			sourceId,
+			parityId,
+			searchParams,
+		);
 
-		reply.send(history);
+		reply.send({
+			data: history,
+			meta: {
+				page: searchParams.page,
+				per_page: searchParams.per_page,
+			},
+		});
 	},
 );
 
