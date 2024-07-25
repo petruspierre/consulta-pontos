@@ -16,13 +16,16 @@ import type { SearchQueryParams } from "./util/search-params.js";
 import { appContainer } from "./container.js";
 import type { SourceController } from "./infra/http/source-controller.js";
 import { CONTROLLERS } from "./infra/http/container.js";
+import type { PartnerController } from "./infra/http/partner-controller.js";
 
 scrapingJob.start();
 
-const sourceDAO = new SourceDAO();
 const parityDAO = new ParityDAO();
 
 const sourceController = appContainer.get<SourceController>(CONTROLLERS.SOURCE);
+const partnerController = appContainer.get<PartnerController>(
+	CONTROLLERS.PARTNER,
+);
 
 const server = Fastify({
 	logger: true,
@@ -59,11 +62,8 @@ server.addHook("onRequest", authenticate);
 server.get("/source", sourceController.search);
 server.get("/source/:sourceId", sourceController.findById);
 
-server.get("/partner", async (request, reply) => {
-	const partners = await db("partner").select("*");
-
-	reply.send(partners);
-});
+server.get("/partner", partnerController.search);
+server.get("/partner/:partnerId", partnerController.findById);
 
 server.get("/source/:sourceId/parity", async (request, reply) => {
 	const { sourceId } = request.params as { sourceId: number };

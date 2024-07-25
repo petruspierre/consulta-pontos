@@ -4,12 +4,16 @@
 GET http://localhost:3366/source?page=1&perPage=15
 Authorization: Bearer {{token}}
 
-### Get all partners
-GET http://localhost:3366/partner
-Authorization: Bearer {{token}}
-
 ### Get source information
 GET http://localhost:3366/source/1
+Authorization: Bearer {{token}}
+
+### Get all partners
+GET http://localhost:3366/partner?filter=A
+Authorization: Bearer {{token}}
+
+### Get partner information
+GET http://localhost:3366/partner/1
 Authorization: Bearer {{token}}
 
 ### Get source parities
