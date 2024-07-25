@@ -17,7 +17,7 @@ GET http://localhost:3366/partner/1
 Authorization: Bearer {{token}}
 
 ### Get source parities
-GET http://localhost:3366/source/1/parity
+GET http://localhost:3366/parity/source/1
 Authorization: Bearer {{token}}
 
 ### Get parity history

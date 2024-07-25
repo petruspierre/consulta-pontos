@@ -17,6 +17,7 @@ import { appContainer } from "./container.js";
 import type { SourceController } from "./infra/http/source-controller.js";
 import { CONTROLLERS } from "./infra/http/container.js";
 import type { PartnerController } from "./infra/http/partner-controller.js";
+import type { ParityController } from "./infra/http/parity-controller.js";
 
 scrapingJob.start();
 
@@ -26,6 +27,7 @@ const sourceController = appContainer.get<SourceController>(CONTROLLERS.SOURCE);
 const partnerController = appContainer.get<PartnerController>(
 	CONTROLLERS.PARTNER,
 );
+const parityController = appContainer.get<ParityController>(CONTROLLERS.PARITY);
 
 const server = Fastify({
 	logger: true,
@@ -65,16 +67,10 @@ server.get("/source/:sourceId", sourceController.findById);
 server.get("/partner", partnerController.search);
 server.get("/partner/:partnerId", partnerController.findById);
 
-server.get("/source/:sourceId/parity", async (request, reply) => {
-	const { sourceId } = request.params as { sourceId: number };
-
-	const parities = await parityDAO.getBySourceId(sourceId);
-
-	reply.send(parities);
-});
+server.get("/parity/source/:sourceId", parityController.getParitiesBySourceId);
 
 server.get(
-	"/source/:sourceId/parity/:parityId/history",
+	"/parity/source/:sourceId/partner/:partnerId/history",
 	async (request, reply) => {
 		const { page, perPage } = request.query as SearchQueryParams;
 		const searchParams = new ParityHistorySearchParams({
@@ -82,14 +78,14 @@ server.get(
 			perPage,
 		});
 
-		const { sourceId, parityId } = request.params as {
+		const { sourceId, partnerId } = request.params as {
 			sourceId: number;
-			parityId: number;
+			partnerId: number;
 		};
 
 		const history = await parityDAO.getHistory(
 			sourceId,
-			parityId,
+			partnerId,
 			searchParams,
 		);
 

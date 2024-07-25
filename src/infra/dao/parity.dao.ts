@@ -10,9 +10,15 @@ export class ParityDAO {
 		const data = await db.raw(
 			`
       SELECT 
-        s.name as "source_name",
-        p.name as "partner_name",
-        pr.*
+        s.name as "sourceName",
+        p.name as "partnerName",
+        pr.id as "parityId",
+				pr.partner_source_id as "partnerSourceId",
+				pr.currency as "currency",
+				pr.value as "value",
+				pr.parity as "parity",
+				pr.premium_parity as "premiumParity",
+				pr.created_at as "createdAt"
       FROM source s
       JOIN partner_source ps ON ps.source_id = s.id
       JOIN partner p ON p.id = ps.partner_id
