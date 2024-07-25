@@ -1,20 +1,15 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import knex, { type Knex } from "knex";
 
 import { env } from "../env.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 export const dbConfig: Knex.Config = {
 	client: "pg",
 	migrations: {
-		directory: path.join(__dirname, "migrations"),
+		directory: "./src/infra/db/migrations",
 		extension: "ts",
 	},
 	seeds: {
-		directory: path.join(__dirname, "seeds"),
+		directory: "./src/infra/db/seeds",
 		extension: "ts",
 	},
 	connection: {
