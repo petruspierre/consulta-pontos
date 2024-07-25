@@ -2,6 +2,7 @@ import { SourceDAO } from "@/infra/dao/source.dao.js";
 import { CronJob } from "cron";
 import puppeteer from "puppeteer";
 import { LiveloSource } from "./sources/livelo.js";
+import { env } from "@/infra/env.js";
 
 const sourceDAO = new SourceDAO();
 
@@ -32,8 +33,12 @@ const startScraping = async () => {
 	await browser.close();
 };
 
+// If development run every minute otherwise run every day at 6am
+const cronExpression =
+	env.ENVIRONMENT === "development" ? "0 * * * * *" : "0 0 6 * * *";
+
 export const scrapingJob = new CronJob(
-	"* * * * *",
+	cronExpression,
 	startScraping,
 	null,
 	false,
