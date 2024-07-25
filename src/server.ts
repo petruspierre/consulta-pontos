@@ -1,4 +1,5 @@
 import "./infra/env.js";
+import "reflect-metadata";
 
 import Fastify from "fastify";
 
@@ -12,11 +13,16 @@ import {
 import { env } from "./infra/env.js";
 import { verifyKey } from "@unkey/api";
 import type { SearchQueryParams } from "./util/search-params.js";
+import { appContainer } from "./container.js";
+import type { SourceController } from "./infra/http/source-controller.js";
+import { CONTROLLERS } from "./infra/http/container.js";
 
 scrapingJob.start();
 
 const sourceDAO = new SourceDAO();
 const parityDAO = new ParityDAO();
+
+const sourceController = appContainer.get<SourceController>(CONTROLLERS.SOURCE);
 
 const server = Fastify({
 	logger: true,
@@ -26,6 +32,10 @@ const authenticate: Fastify.onRequestAsyncHookHandler = async (
 	request,
 	reply,
 ) => {
+	if (env.ENVIRONMENT === "development") {
+		return;
+	}
+
 	const authHeader = request.headers.authorization;
 	const key = authHeader?.toString().replace("Bearer ", "");
 
@@ -46,26 +56,7 @@ const authenticate: Fastify.onRequestAsyncHookHandler = async (
 
 server.addHook("onRequest", authenticate);
 
-server.get("/source", async (request, reply) => {
-	const { page, per_page, filter, sort, sort_dir } =
-		request.query as SearchQueryParams;
-	const searchParams = new SourceSearchParams({
-		filter,
-		page,
-		per_page,
-		sort,
-		sort_dir,
-	});
-	const sources = await sourceDAO.search(searchParams);
-
-	reply.send({
-		data: sources,
-		meta: {
-			page: searchParams.page,
-			per_page: searchParams.per_page,
-		},
-	});
-});
+server.get("/source", sourceController.search);
 
 server.get("/partner", async (request, reply) => {
 	const partners = await db("partner").select("*");
@@ -92,10 +83,10 @@ server.get("/source/:sourceId/parity", async (request, reply) => {
 server.get(
 	"/source/:sourceId/parity/:parityId/history",
 	async (request, reply) => {
-		const { page, per_page } = request.query as SearchQueryParams;
+		const { page, perPage } = request.query as SearchQueryParams;
 		const searchParams = new ParityHistorySearchParams({
 			page,
-			per_page,
+			perPage,
 		});
 
 		const { sourceId, parityId } = request.params as {
@@ -113,7 +104,7 @@ server.get(
 			data: history,
 			meta: {
 				page: searchParams.page,
-				per_page: searchParams.per_page,
+				perPage: searchParams.perPage,
 			},
 		});
 	},

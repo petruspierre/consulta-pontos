@@ -1,8 +1,10 @@
 import { SearchParams } from "@/util/search-params.js";
 import { db } from "../db/connection.js";
+import { injectable } from "inversify";
 
 export class ParityHistorySearchParams extends SearchParams<undefined> {}
 
+@injectable()
 export class ParityDAO {
 	async getBySourceId(sourceId: number) {
 		const data = await db.raw(
@@ -64,8 +66,8 @@ export class ParityDAO {
 
 		if (searchParams) {
 			query
-				.limit(searchParams.per_page)
-				.offset(searchParams.per_page * (searchParams.page - 1));
+				.limit(searchParams.perPage)
+				.offset(searchParams.perPage * (searchParams.page - 1));
 		}
 
 		const data = await query;

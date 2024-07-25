@@ -8,6 +8,7 @@ const envSchema = z.object({
 	DATABASE_HOST: z.string().default("localhost"),
 	DATABASE_PORT: z.coerce.number().default(5432),
 	PORT: z.coerce.number().default(3366),
+	ENVIRONMENT: z.string().default("development"),
 });
 
 const envValidation = envSchema.safeParse({
@@ -17,6 +18,7 @@ const envValidation = envSchema.safeParse({
 	DATABASE_HOST: process.env.DATABASE_HOST,
 	DATABASE_PORT: process.env.DATABASE_PORT,
 	PORT: process.env.PORT,
+	ENVIRONMENT: process.env.ENVIRONMENT,
 });
 
 if (!envValidation.success) {

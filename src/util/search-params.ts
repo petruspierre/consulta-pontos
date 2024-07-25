@@ -1,33 +1,41 @@
 export type SearchQueryParams = {
 	page?: string;
-	per_page?: string;
+	perPage?: string;
 	filter?: string;
 	sort?: string;
-	sort_dir?: string;
+	sortDir?: string;
+};
+
+export type PaginatedOutput<T> = {
+	data: T[];
+	meta: {
+		page: number;
+		perPage: number;
+	};
 };
 
 export type SortDir = "asc" | "desc";
 
 export type SearchParamsProps<Filter = string> = {
 	page?: number | string;
-	per_page?: number | string;
+	perPage?: number | string;
 	sort?: string | null;
-	sort_dir?: string | null;
+	sortDir?: string | null;
 	filter?: Filter | null;
 };
 
 export class SearchParams<Filter = string> {
 	protected _page!: number;
-	protected _per_page!: number;
+	protected _perPage!: number;
 	protected _sort!: string | null;
-	protected _sort_dir!: SortDir | null;
+	protected _sortDir!: SortDir | null;
 	protected _filter!: Filter | null;
 
 	constructor(props: SearchParamsProps<Filter> = {}) {
 		this.page = props.page || 1;
-		this.per_page = props.per_page || 10;
+		this.perPage = props.perPage || 10;
 		this.sort = props.sort || null;
-		this.sort_dir = props.sort_dir || null;
+		this.sortDir = props.sortDir || null;
 		this.filter = props.filter || null;
 	}
 
@@ -49,22 +57,22 @@ export class SearchParams<Filter = string> {
 		this._page = _page;
 	}
 
-	get per_page(): number {
-		return this._per_page;
+	get perPage(): number {
+		return this._perPage;
 	}
 
-	private set per_page(value: number | string) {
-		let _per_page = +value;
+	private set perPage(value: number | string) {
+		let _perPage = +value;
 
 		if (
-			Number.isNaN(_per_page) ||
-			_per_page <= 0 ||
-			Number.parseInt(value as string) !== _per_page
+			Number.isNaN(_perPage) ||
+			_perPage <= 0 ||
+			Number.parseInt(value as string) !== _perPage
 		) {
-			_per_page = 10;
+			_perPage = 10;
 		}
 
-		this._per_page = _per_page;
+		this._perPage = _perPage;
 	}
 
 	get sort(): string | null {
@@ -76,18 +84,18 @@ export class SearchParams<Filter = string> {
 			value === null || value === undefined || value === "" ? null : `${value}`;
 	}
 
-	get sort_dir(): SortDir | null {
-		return this._sort_dir;
+	get sortDir(): SortDir | null {
+		return this._sortDir;
 	}
 
-	private set sort_dir(value: string | null) {
+	private set sortDir(value: string | null) {
 		if (!this.sort) {
-			this._sort_dir = null;
+			this._sortDir = null;
 			return;
 		}
 
 		const dir = `${value}`.toLowerCase();
-		this._sort_dir = dir !== "asc" && dir !== "desc" ? "asc" : dir;
+		this._sortDir = dir !== "asc" && dir !== "desc" ? "asc" : dir;
 	}
 
 	get filter(): Filter | null {

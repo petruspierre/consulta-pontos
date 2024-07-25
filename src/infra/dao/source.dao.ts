@@ -1,8 +1,10 @@
 import { SearchParams } from "@/util/search-params.js";
 import { db } from "../db/connection.js";
+import { injectable } from "inversify";
 
 export class SourceSearchParams extends SearchParams<string> {}
 
+@injectable()
 export class SourceDAO {
 	async findById(id: number) {
 		const source = await db("source")
@@ -57,11 +59,11 @@ export class SourceDAO {
 				name: "name",
 				url: "url",
 			})
-			.limit(params.per_page)
-			.offset((params.page - 1) * params.per_page);
+			.limit(params.perPage)
+			.offset((params.page - 1) * params.perPage);
 
-		if (params.sort && params.sort_dir) {
-			query.orderBy(params.sort, params.sort_dir);
+		if (params.sort && params.sortDir) {
+			query.orderBy(params.sort, params.sortDir);
 		}
 
 		if (params.filter) {
