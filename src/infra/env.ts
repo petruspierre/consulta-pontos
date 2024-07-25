@@ -9,6 +9,7 @@ const envSchema = z.object({
 	DATABASE_PORT: z.coerce.number().default(5432),
 	PORT: z.coerce.number().default(3366),
 	ENVIRONMENT: z.string().default("development"),
+	DATABASE_SSL_CERT: z.string().optional(),
 });
 
 const envValidation = envSchema.safeParse({
@@ -19,6 +20,7 @@ const envValidation = envSchema.safeParse({
 	DATABASE_PORT: process.env.DATABASE_PORT,
 	PORT: process.env.PORT,
 	ENVIRONMENT: process.env.ENVIRONMENT,
+	DATABASE_SSL_CERT: process.env.DATABASE_SSL_CERT,
 });
 
 if (!envValidation.success) {

@@ -1,6 +1,7 @@
 import knex, { type Knex } from "knex";
 
 import { env } from "../env.js";
+import { readFileSync } from "node:fs";
 
 export const dbConfig: Knex.Config = {
 	client: "pg",
@@ -18,6 +19,13 @@ export const dbConfig: Knex.Config = {
 		user: env.DATABASE_USER,
 		password: env.DATABASE_PASSWORD,
 		database: env.DATABASE_NAME,
+		...(env.DATABASE_SSL_CERT
+			? {
+					ssl: {
+						ca: readFileSync(env.DATABASE_SSL_CERT).toString(),
+					},
+				}
+			: {}),
 	},
 };
 
