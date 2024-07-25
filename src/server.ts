@@ -57,19 +57,12 @@ const authenticate: Fastify.onRequestAsyncHookHandler = async (
 server.addHook("onRequest", authenticate);
 
 server.get("/source", sourceController.search);
+server.get("/source/:sourceId", sourceController.findById);
 
 server.get("/partner", async (request, reply) => {
 	const partners = await db("partner").select("*");
 
 	reply.send(partners);
-});
-
-server.get("/source/:sourceId", async (request, reply) => {
-	const { sourceId } = request.params as { sourceId: number };
-
-	const source = await sourceDAO.findById(sourceId);
-
-	reply.send(source);
 });
 
 server.get("/source/:sourceId/parity", async (request, reply) => {
