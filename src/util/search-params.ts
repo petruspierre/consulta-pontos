@@ -7,7 +7,7 @@ export type SearchQueryParams = {
 };
 
 export type PaginatedOutput<T> = {
-	data: T[];
+	data: T;
 	meta: {
 		page: number;
 		perPage: number;

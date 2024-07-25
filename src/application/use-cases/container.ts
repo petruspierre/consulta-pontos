@@ -4,6 +4,7 @@ import { FindSourceByIdUseCase } from "./find-source-by-id.js";
 import { SearchPartnersUseCase } from "./search-partners.js";
 import { FindPartnerByIdUseCase } from "./find-partner-by-id.js";
 import { GetParityBySourceIdUseCase } from "./get-parity-by-source-id.js";
+import { GetParityHistoryBySourceIdUseCase } from "./get-parity-history-by-source-id.js";
 
 export const USE_CASES = {
 	SEARCH_SOURCES: Symbol("SearchSourcesUseCase"),
@@ -11,6 +12,7 @@ export const USE_CASES = {
 	SEARCH_PARTNERS: Symbol("SearchPartnersUseCase"),
 	FIND_PARTNER_BY_ID: Symbol("FindPartnerByIdUseCase"),
 	GET_PARITY_BY_SOURCE_ID: Symbol("GetParityBySourceIdUseCase"),
+	GET_PARITY_HISTORY_BY_SOURCE_ID: Symbol("GetParityHistoryBySourceIdUseCase"),
 };
 
 const useCasesContainer = new Container({ defaultScope: "Transient" });
@@ -34,5 +36,11 @@ useCasesContainer
 useCasesContainer
 	.bind<GetParityBySourceIdUseCase>(USE_CASES.GET_PARITY_BY_SOURCE_ID)
 	.to(GetParityBySourceIdUseCase);
+
+useCasesContainer
+	.bind<GetParityHistoryBySourceIdUseCase>(
+		USE_CASES.GET_PARITY_HISTORY_BY_SOURCE_ID,
+	)
+	.to(GetParityHistoryBySourceIdUseCase);
 
 export { useCasesContainer };

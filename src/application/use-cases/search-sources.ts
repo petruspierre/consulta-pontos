@@ -9,11 +9,13 @@ import { DAOS } from "@/infra/dao/container.js";
 
 export type SearchSourcesInput = SearchQueryParams;
 
-export type SearchSourcesOutput = PaginatedOutput<{
-	id: number;
-	name: string;
-	url: string;
-}>;
+export type SearchSourcesOutput = PaginatedOutput<
+	{
+		id: number;
+		name: string;
+		url: string;
+	}[]
+>;
 
 @injectable()
 export class SearchSourcesUseCase {

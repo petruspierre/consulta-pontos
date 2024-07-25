@@ -12,10 +12,12 @@ import { DAOS } from "@/infra/dao/container.js";
 
 export type SearchPartnersInput = SearchQueryParams;
 
-export type SearchPartnersOutput = PaginatedOutput<{
-	id: number;
-	name: string;
-}>;
+export type SearchPartnersOutput = PaginatedOutput<
+	{
+		id: number;
+		name: string;
+	}[]
+>;
 
 @injectable()
 export class SearchPartnersUseCase {
