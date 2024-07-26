@@ -6,7 +6,7 @@ import { env } from "@/infra/env.js";
 
 const sourceDAO = new SourceDAO();
 
-const startScraping = async () => {
+export const startScraping = async () => {
 	console.log("Scraping job runnning", new Date().toISOString());
 
 	const sources = await sourceDAO.findAll();

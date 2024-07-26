@@ -4,7 +4,7 @@ import "reflect-metadata";
 import Fastify from "fastify";
 import { verifyKey } from "@unkey/api";
 
-import { scrapingJob } from "./scraping/index.js";
+import { scrapingJob, startScraping } from "./scraping/index.js";
 import { env } from "./infra/env.js";
 import { appContainer } from "./container.js";
 import type { SourceController } from "./infra/http/source-controller.js";
@@ -64,6 +64,11 @@ server.get(
 	"/parity/source/:sourceId/partner/:partnerId/history",
 	parityController.getParityHistoryBySourceId,
 );
+
+server.post("/refresh", async (request, reply) => {
+	startScraping();
+	return reply.send({ message: "Scraping job started" });
+});
 
 const startServer = async () => {
 	try {
