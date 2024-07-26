@@ -11,7 +11,7 @@ GET {{baseURL}}/source/1
 Authorization: Bearer {{token}}
 
 ### Get all partners
-GET {{baseURL}}/partner?filter=A
+GET {{baseURL}}/partner
 Authorization: Bearer {{token}}
 
 ### Get partner information

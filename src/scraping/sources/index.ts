@@ -1,4 +1,3 @@
-import { Source } from "@/entities/source.js";
 import type { SourceDAO } from "@/infra/dao/source.dao.js";
 import { db } from "@/infra/db/connection.js";
 import type { ElementHandle, Page } from "puppeteer";
@@ -49,7 +48,6 @@ export abstract class ScrapingSource {
 	}
 
 	protected async saveResults(results: ScrapingResult) {
-		console.log("Saving results", results);
 		const data = Object.entries(results).map(
 			([sourcePartnerId, { currency, value, parity, url, premiumParity }]) => ({
 				partner_source_id: sourcePartnerId,
