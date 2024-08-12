@@ -1,6 +1,6 @@
 @token = {{$dotenv API_TOKEN}}
-@baseURL = http://localhost:3366
-# @baseURL = https://api.consultapontos.com.br/
+@baseURL = http://localhost:3366/v1
+# @baseURL = https://api.consultapontos.com.br/v1
 
 ### Get all sources
 GET {{baseURL}}/source?page=1&perPage=15

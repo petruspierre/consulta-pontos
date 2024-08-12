@@ -2,7 +2,6 @@ import "./infra/env.js";
 import "reflect-metadata";
 
 import Fastify from "fastify";
-import { verifyKey } from "@unkey/api";
 
 import { scrapingJob, startScraping } from "./scraping/index.js";
 import { env } from "./infra/env.js";
@@ -24,48 +23,25 @@ const server = Fastify({
 	logger: true,
 });
 
-const authenticate: Fastify.onRequestAsyncHookHandler = async (
-	request,
-	reply,
-) => {
-	if (env.ENVIRONMENT === "development") {
-		return;
-	}
+await server.register(import('@fastify/rate-limit'), {
+  max: 150,
+	timeWindow: '1 day',
+})
 
-	const authHeader = request.headers.authorization;
-	const key = authHeader?.toString().replace("Bearer ", "");
+server.get("/v1/source", sourceController.search);
+server.get("/v1/source/:sourceId", sourceController.findById);
 
-	if (!key) {
-		return reply.code(401).send({ error: "Unauthorized" });
-	}
+server.get("/v1/partner", partnerController.search);
+server.get("/v1/partner/:partnerId", partnerController.findById);
 
-	const { result, error } = await verifyKey(key);
-
-	if (error) {
-		return reply.code(500).send({ error: "Internal Server Error" });
-	}
-
-	if (!result.valid) {
-		return reply.code(401).send({ error: "Unauthorized" });
-	}
-};
-
-server.addHook("onRequest", authenticate);
-
-server.get("/source", sourceController.search);
-server.get("/source/:sourceId", sourceController.findById);
-
-server.get("/partner", partnerController.search);
-server.get("/partner/:partnerId", partnerController.findById);
-
-server.get("/parity/source/:sourceId", parityController.getParitiesBySourceId);
+server.get("/v1/parity/source/:sourceId", parityController.getParitiesBySourceId);
 
 server.get(
-	"/parity/source/:sourceId/partner/:partnerId/history",
+	"/v1/parity/source/:sourceId/partner/:partnerId/history",
 	parityController.getParityHistoryBySourceId,
 );
 
-server.post("/refresh", async (request, reply) => {
+server.post("/v1/refresh", async (request, reply) => {
 	startScraping();
 	return reply.send({ message: "Scraping job started" });
 });
