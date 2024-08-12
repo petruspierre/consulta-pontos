@@ -11,7 +11,9 @@ export class ParityDAO {
 			`
       SELECT 
         s.name as "sourceName",
+				s.id as "sourceId",
         p.name as "partnerName",
+				p.id as "partnerId",
         pr.id as "parityId",
 				pr.partner_source_id as "partnerSourceId",
 				pr.currency as "currency",
@@ -48,7 +50,7 @@ export class ParityDAO {
 				partnerId: "partner_id",
 				partnerName: "partner.name",
 				sourceId: "source_id",
-				sourceName: "source.name",
+				sourceName: "source.name"
 			})
 			.join("partner", "partner_source.partner_id", "partner.id")
 			.join("source", "partner_source.source_id", "source.id")

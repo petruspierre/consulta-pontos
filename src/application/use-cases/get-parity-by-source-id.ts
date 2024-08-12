@@ -8,7 +8,9 @@ export type GetParityBySourceIdInput = {
 
 export type GetParityBySourceIdOutput = {
 	sourceName: string;
+	sourceId: number;
 	partnerName: string;
+	partnerId: number;
 	parityId: string;
 	partnerSourceId: string;
 	currency: string;

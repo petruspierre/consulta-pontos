@@ -18,10 +18,13 @@ export class PartnerDAO {
 
 		const partnerSources = await db("partner_source")
 			.select({
-				id: "id",
-				sourceId: "source_id",
+				id: "partner_source.id",
+				sourceId: "source.id",
+				sourceName: "source.name",
+				sourceUrl: "source.url",
 			})
-			.where("partner_id", id);
+			.where("partner_id", id)
+			.leftJoin("source", "partner_source.source_id", "source.id");
 
 		if (!partner) {
 			throw new Error("Partner not found");
@@ -30,12 +33,7 @@ export class PartnerDAO {
 		return {
 			id: partner.id,
 			name: partner.name,
-			sources: partnerSources.map((partnerSource) => {
-				return {
-					id: partnerSource.id,
-					sourceId: partnerSource.sourceId,
-				};
-			}),
+			sources: partnerSources,
 		};
 	}
 

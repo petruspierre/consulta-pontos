@@ -20,6 +20,7 @@ export type GetParityHistoryBySourceIdOutput = PaginatedOutput<{
 	partnerName: string;
 	sourceId: number;
 	sourceName: string;
+	url: string;
 	history: {
 		parityId: string;
 		currency: string;

@@ -13,6 +13,8 @@ export type FindPartnerByIdOutput = {
 	sources: {
 		id: string;
 		sourceId: number;
+		sourceName: string;
+		sourceUrl: string;
 	}[];
 };
 
