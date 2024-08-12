@@ -47,16 +47,7 @@ const setupApi = async () => {
 		return reply.send({ message: "Scraping job started" });
 	});
 	
-	const startServer = async () => {
-		try {
-			await server.listen({ port: env.PORT });
-		} catch (err) {
-			server.log.error(err);
-			process.exit(1);
-		}
-	};
-	
-	startServer();
+	await server.listen({ port: env.PORT });
 }
 
 setupApi();
