@@ -70,14 +70,19 @@ export abstract class ScrapingSource {
 
 				if (existingParityForToday) {
 					if (existingParityForToday.parity >= parity) {
+						console.log("Parity already exists and is higher than the new one");
 						continue;
 					}
+
+					console.log("Updating existing parity");
 
 					await trx("parity")
 						.where("id", existingParityForToday.id)
 						.update(data);
 					continue;
 				}
+
+				console.log("Inserting new parity");
 
 				await trx("parity").insert(data);
 			}
