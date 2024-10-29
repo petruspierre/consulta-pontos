@@ -48,16 +48,39 @@ export abstract class ScrapingSource {
 	}
 
 	protected async saveResults(results: ScrapingResult) {
-		const data = Object.entries(results).map(
-			([sourcePartnerId, { currency, value, parity, url, premiumParity }]) => ({
-				partner_source_id: sourcePartnerId,
-				currency,
-				value,
-				parity,
-				url,
-				premium_parity: premiumParity,
-			}),
-		);
-		await db("parity").insert(data);
+		await db.transaction(async (trx) => {
+			for (const entry of Object.entries(results)) {
+				const [
+					sourcePartnerId,
+					{ currency, value, parity, url, premiumParity },
+				] = entry;
+				const data = {
+					partner_source_id: sourcePartnerId,
+					currency,
+					value,
+					parity,
+					url,
+					premium_parity: premiumParity,
+				};
+
+				const existingParityForToday = await trx("parity")
+					.where("partner_source_id", sourcePartnerId)
+					.andWhere("created_at", ">=", db.raw("CURRENT_DATE"))
+					.first();
+
+				if (existingParityForToday) {
+					if (existingParityForToday.parity >= parity) {
+						continue;
+					}
+
+					await trx("parity")
+						.where("id", existingParityForToday.id)
+						.update(data);
+					continue;
+				}
+
+				await trx("parity").insert(data);
+			}
+		});
 	}
 }

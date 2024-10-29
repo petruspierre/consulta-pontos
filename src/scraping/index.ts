@@ -33,9 +33,9 @@ export const startScraping = async () => {
 	await browser.close();
 };
 
-// If development run every minute otherwise run every day 10am
+// If development run every minute otherwise run every hour
 const cronExpression =
-	env.ENVIRONMENT === "development" ? "0 * * * * *" : "0 0 10 * * *";
+	env.ENVIRONMENT === "development" ? "0 * * * * *" : "0 0 * * * *";
 
 export const scrapingJob = new CronJob(
 	cronExpression,
