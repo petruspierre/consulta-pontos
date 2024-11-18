@@ -51,7 +51,7 @@ export class PartnerDAO {
 		}
 
 		if (params.filter) {
-			query.where("name", "like", `%${params.filter}%`);
+			query.where("name", "ilike", `%${params.filter}%`);
 		}
 
 		const data = await query;
