@@ -1,18 +1,13 @@
 import type { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
-	await knex("parity").del();
-	await knex("partner_source").del();
-	await knex("source").del();
-	await knex("partner").del();
-
 	await knex("source").insert([
 		{
 			id: 1,
 			name: "Livelo",
 			url: "https://www.livelo.com.br/ganhe-pontos-compre-e-pontue",
 		},
-	]);
+	]).onConflict("id").ignore();
 
 	await knex("partner").insert([
 		{ id: 1, name: "ABC da Construcao" },
@@ -148,14 +143,14 @@ export async function seed(knex: Knex): Promise<void> {
 		{ id: 131, name: "Klabin ForYou" },
 		{ id: 132, name: "LE LIS" },
 		{ id: 133, name: "LEGO" },
-		{ id: 134, name: "Liga Vitória Seguro Viagem" },
-		{ id: 135, name: "Liga Vitória Seguro Auto" },
-		{ id: 136, name: "Liga Vitória Seguro Vida" },
-		{ id: 137, name: "Liga Vitória Seguro Moto" },
-		{ id: 138, name: "Liga Vitória Seguro Residencial" },
-		{ id: 139, name: "Liga Vitória Seguro Residencial" },
-		{ id: 140, name: "Liga Vitória Seguro Viagem" },
-		{ id: 141, name: "Liga Vitória Seguros" },
+		{ id: 134, name: "Liga Vitoria - Seguro de Viagem" },
+		{ id: 135, name: "Liga Vitoria Seguro Auto" },
+		{ id: 136, name: "Liga Vitoria Seguro de Vida" },
+		{ id: 137, name: "Liga Vitoria Seguro Moto" },
+		{ id: 138, name: "Liga Vitoria Seguro Residencial" },
+		{ id: 139, name: "Liga Vitoria Seguro Residencial" },
+		{ id: 140, name: "Liga Vitoria Seguro Viagem" },
+		{ id: 141, name: "Liga Vitoria Seguros" },
 		{ id: 142, name: "LIVE!" },
 		{ id: 143, name: "Liz" },
 		{ id: 144, name: "Localiza" },
@@ -226,7 +221,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{ id: 209, name: "Portallar" },
 		{ id: 210, name: "Porto Faz" },
 		{ id: 211, name: "Posthaus" },
-		{ id: 212, name: "Privé Hotéis e Parques" },
+		{ id: 212, name: "Prive Hotéis e Parques" },
 		{ id: 213, name: "Puket" },
 		{ id: 214, name: "Qcompra" },
 		{ id: 215, name: "Quem Disse, Berenice?" },
@@ -288,13 +283,31 @@ export async function seed(knex: Knex): Promise<void> {
 		{ id: 271, name: "VR Collezioni" },
 		{ id: 272, name: "Vá de Táxi" },
 		{ id: 273, name: "Wet n Wild" },
-		{ id: 274, name: "Windsor Hoteis" },
+		{ id: 274, name: "Windsor Hotéis" },
 		{ id: 275, name: "Wise UP" },
 		{ id: 276, name: "Yvy" },
 		{ id: 277, name: "Zattini" },
 		{ id: 278, name: "Zissou" },
 		{ id: 279, name: "Época cosmésticos" },
-	]);
+		{ id: 280, name: "ADCOS" },
+		{ id: 281, name: "Bulbe Energia" },
+		{ id: 282, name: "Caffeine Army" },
+		{ id: 283, name: "Centauro" },
+		{ id: 284, name: "Ciclic Seguro Viagem" },
+		{ id: 285, name: "Claro" },
+		{ id: 286, name: "D'Or Mais Saúde" },
+		{ id: 287, name: "Dr Jones" },
+		{ id: 288, name: "Hering Outlet" },
+		{ id: 289, name: "Lacoste" },
+		{ id: 290, name: "Aramis" },
+		{ id: 291, name: "Max Titanium" },
+		{ id: 292, name: "MedSenior" },
+		{ id: 293, name: "OUi Paris" },
+		{ id: 294, name: "Probiotica" },
+		{ id: 295, name: "Seguro Residencial MAPFRE" },
+		{ id: 296, name: "Shopee" },
+		{ id: 297, name: "Vult" },
+	]).onConflict("id").merge();
 
 	await knex("partner_source").insert([
 		{
@@ -385,7 +398,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 18,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Baianão" }),
+			reference: JSON.stringify({ title: "Baianao" }),
 		},
 		{
 			partner_id: 19,
@@ -470,7 +483,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 35,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Bradesco Capitalização" }),
+			reference: JSON.stringify({ title: "Bradesco Capitalizacao" }),
 		},
 		{
 			partner_id: 36,
@@ -515,7 +528,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 44,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Café Orfeu" }),
+			reference: JSON.stringify({ title: "Cafe Orfeu" }),
 		},
 		{
 			partner_id: 45,
@@ -625,7 +638,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 66,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Câmbio Online" }),
+			reference: JSON.stringify({ title: "Cambio Online" }),
 		},
 		{
 			partner_id: 67,
@@ -770,7 +783,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 95,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Fóssil" }),
+			reference: JSON.stringify({ title: "Fossil" }),
 		},
 		{
 			partner_id: 96,
@@ -900,7 +913,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 121,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Império" }),
+			reference: JSON.stringify({ title: "Imperio" }),
 		},
 		{
 			partner_id: 122,
@@ -1050,7 +1063,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 151,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Luck Receptivo (João Pessoa)" }),
+			reference: JSON.stringify({ title: "Luck Receptivo (Joao Pessoa)" }),
 		},
 		{
 			partner_id: 152,
@@ -1065,7 +1078,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 154,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Luck Receptivo Maceió" }),
+			reference: JSON.stringify({ title: "Luck Receptivo Maceio" }),
 		},
 		{
 			partner_id: 155,
@@ -1185,7 +1198,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 178,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Mycon Consórcio Digital" }),
+			reference: JSON.stringify({ title: "Mycon Consorcio Digital" }),
 		},
 		{
 			partner_id: 179,
@@ -1315,7 +1328,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 204,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Petlove Saúde" }),
+			reference: JSON.stringify({ title: "Petlove Saude" }),
 		},
 		{
 			partner_id: 205,
@@ -1355,7 +1368,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 212,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Privé Hotéis e Parques" }),
+			reference: JSON.stringify({ title: "Prive Hoteis e Parques" }),
 		},
 		{
 			partner_id: 213,
@@ -1570,7 +1583,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 255,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Tia Sônia" }),
+			reference: JSON.stringify({ title: "Tia Sonia" }),
 		},
 		{
 			partner_id: 256,
@@ -1580,12 +1593,12 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 257,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Tokio Marine" }),
+			reference: JSON.stringify({ title: "Tokio Marine Seguros" }),
 		},
 		{
 			partner_id: 258,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Top Móveis" }),
+			reference: JSON.stringify({ title: "Top Moveis" }),
 		},
 		{
 			partner_id: 259,
@@ -1640,7 +1653,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 269,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Viação Garcia" }),
+			reference: JSON.stringify({ title: "Viacao Garcia" }),
 		},
 		{
 			partner_id: 270,
@@ -1665,7 +1678,7 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 274,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Windsor Hoteis" }),
+			reference: JSON.stringify({ title: "Hoteis Windsor" }),
 		},
 		{
 			partner_id: 275,
@@ -1690,7 +1703,100 @@ export async function seed(knex: Knex): Promise<void> {
 		{
 			partner_id: 279,
 			source_id: 1,
-			reference: JSON.stringify({ title: "Época cosmésticos" }),
+			reference: JSON.stringify({ title: "Epoca cosmesticos" }),
 		},
-	]);
+		{
+			partner_id: 280,
+			source_id: 1,
+			reference: JSON.stringify({ title: "ADCOS" }),
+		},
+		{
+			partner_id: 281,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Bulbe Energia" }),
+		},
+		{
+			partner_id: 282,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Caffeine Army" }),
+		},
+		{
+			partner_id: 283,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Centauro" }),
+		},
+		{
+			partner_id: 284,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Ciclic Seguro Viagem" }),
+		},
+		{
+			partner_id: 285,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Claro" }),
+		},
+		{
+			partner_id: 286,
+			source_id: 1,
+			reference: JSON.stringify({ title: "D'Or Mais Saude" }),
+		},
+		{
+			partner_id: 287,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Dr Jones" }),
+		},
+		{
+			partner_id: 288,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Hering Outlet" }),
+		},
+		{
+			partner_id: 289,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Lacoste" }),
+		},
+		{
+			partner_id: 290,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Aramis" }),
+		},
+		{
+			partner_id: 291,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Max Titanium" }),
+		},
+		{
+			partner_id: 292,
+			source_id: 1,
+			reference: JSON.stringify({ title: "MedSenior" }),
+		},
+		{
+			partner_id: 293,
+			source_id: 1,
+			reference: JSON.stringify({ title: "O.U.i Paris" }),
+		},
+		{
+			partner_id: 294,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Probiotica" }),
+		},
+		{
+			partner_id: 295,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Seguro Residencial MAPFRE" }),
+		},
+		{
+			partner_id: 296,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Shopee" }),
+		},
+		{
+			partner_id: 297,
+			source_id: 1,
+			reference: JSON.stringify({ title: "Vult" }),
+		},
+	]).onConflict([
+		"partner_id",
+		"source_id",
+	]).merge();
 }
