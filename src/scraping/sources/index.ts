@@ -8,7 +8,7 @@ export type ScrapingResult = Record<
 		currency: string;
 		value: number;
 		parity: number;
-		url: string;
+		url?: string;
 		premiumParity: number | null;
 	}
 >;
@@ -48,6 +48,7 @@ export abstract class ScrapingSource {
 	}
 
 	protected async saveResults(results: ScrapingResult) {
+		console.log(`Saving ${Object.values(results).length} results for source ${this.sourceId}`);
 		await db.transaction(async (trx) => {
 			for (const entry of Object.entries(results)) {
 				const [

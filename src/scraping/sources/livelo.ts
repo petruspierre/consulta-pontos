@@ -22,12 +22,18 @@ export class LiveloSource extends ScrapingSource {
 		console.log("Livelo source running...");
 		const source = await this.loadSource();
 
+		console.log('Source URL:', source.url);
+
 		await page.goto(source.url, { waitUntil: "domcontentloaded" });
+
+		console.log('Page loaded');
 		await page.setViewport({ width: 1080, height: 1024 });
 
 		await page.waitForSelector(this.selectors.affiliateCards);
+		console.log('Parity cards loaded');
 		const cards = await page.$$(this.selectors.affiliateCards);
 
+		console.log('Cards:', cards.length);
 		const result = {} as ScrapingResult;
 
 		const sourcePartners = source.partners.reduce(
@@ -40,6 +46,7 @@ export class LiveloSource extends ScrapingSource {
 		);
 
 		for (const card of cards) {
+			console.log(`Processing card ${cards.indexOf(card) + 1}/${cards.length}`);
 			const image = await this.getElementOrThrow<HTMLImageElement>(
 				card,
 				this.selectors.cardImage,
@@ -47,12 +54,14 @@ export class LiveloSource extends ScrapingSource {
 			const title = await image?.evaluate((node) => node.alt);
 
 			if (!title) {
+				console.log(`Skipping card ${cards.indexOf(card) + 1}. Missing title.`);
 				continue;
 			}
 
 			const sourcePartnerId = sourcePartners[title];
 
 			if (!sourcePartnerId) {
+				console.log(`Skipping ${title} card. Missing source partner id.`);
 				continue;
 			}
 
@@ -92,9 +101,16 @@ export class LiveloSource extends ScrapingSource {
 				!value ||
 				!parity ||
 				!currency ||
-				!url ||
 				!propertyOf(currency, this.currencyMap)
 			) {
+				console.log(`
+					Skipping ${title} card. Missing data.
+						currency: ${!!currency}
+						value: ${!!value}
+						parity: ${!!parity}
+						url: ${!!url}
+						currencyExists: ${!!propertyOf(currency!, this.currencyMap)}
+					`);
 				continue;
 			}
 
@@ -102,7 +118,6 @@ export class LiveloSource extends ScrapingSource {
 				currency: this.currencyMap[currency],
 				value: Number.parseFloat(value.replace(",", ".")),
 				parity: Number.parseFloat(parity.replace(",", ".")),
-				url,
 				premiumParity: premiumParity
 					? Number.parseFloat(premiumParity.replace(",", "."))
 					: null,
