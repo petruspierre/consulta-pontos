@@ -13,7 +13,8 @@ export const startScraping = async () => {
 
 	const browser = await puppeteer.launch({
 		headless: true,
-		executablePath: env.ENVIRONMENT !== 'development' ? '/usr/bin/google-chrome' : undefined
+		executablePath: env.ENVIRONMENT !== 'development' ? '/usr/bin/google-chrome' : undefined,
+		args: ['--no-sandbox']
 	});
 	const page = await browser.newPage();
 	await page.setUserAgent(
