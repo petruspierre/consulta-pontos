@@ -54,7 +54,7 @@ const setupApi = async () => {
 		return reply.send({ message: "Scraping job started" });
 	});
 
-	await server.listen({ port: env.PORT });
+	await server.listen({ port: env.PORT, host: '0.0.0.0' });
 };
 
 setupApi();
