@@ -11,7 +11,10 @@ export const startScraping = async () => {
 
 	const sources = await sourceDAO.findAll();
 
-	const browser = await puppeteer.launch({ headless: true });
+	const browser = await puppeteer.launch({
+		headless: true,
+		executablePath: env.ENVIRONMENT !== 'development' ? '/usr/bin/google-chrome' : undefined
+	});
 	const page = await browser.newPage();
 	await page.setUserAgent(
 		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
